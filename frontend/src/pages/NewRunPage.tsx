@@ -26,8 +26,17 @@ export default function NewRunPage() {
       <div className="page-header">
         <div>
           <h2>Run Workflow</h2>
-          <p>Trigger an LSTM NER or Transformer decoder workflow through the FastAPI backend.</p>
+          <p>
+            Trigger the full LangGraph path: config loading, dataset prep, training, evaluation,
+            failure analysis, report generation, and experiment tracking.
+          </p>
         </div>
+      </div>
+      <div className="workflow-steps">
+        <span>1. Select config</span>
+        <span>2. Train model</span>
+        <span>3. Save artifacts</span>
+        <span>4. Review report</span>
       </div>
       <RunWorkflowForm
         selectedConfig={selectedConfig}

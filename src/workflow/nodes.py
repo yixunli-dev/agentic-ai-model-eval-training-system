@@ -101,6 +101,7 @@ def evaluate_model_node(state):
             state["dataset"],
             predictions_path,
         )
+    metrics["loss_history"] = state.get("training_history", [])
     metrics_path = Path(state["run_dir"]) / "metrics.json"
     metrics_path.write_text(json.dumps(metrics, indent=2) + "\n", encoding="utf-8")
 

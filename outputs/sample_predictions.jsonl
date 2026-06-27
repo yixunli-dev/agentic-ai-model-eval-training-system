@@ -1,0 +1,2 @@
+{"prompt": "machine learning", "generated_text": "machine learning models predict tokens machine learning"}
+{"tokens": ["Tesla", "builds", "vehicles", "in", "California"], "gold_tags": ["B-ORG", "O", "O", "O", "B-LOC"], "predicted_tags": ["B-ORG", "O", "O", "O", "B-LOC"]}

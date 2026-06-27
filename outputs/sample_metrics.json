@@ -1,0 +1,18 @@
+{
+  "eval_loss": 0.0029,
+  "perplexity": 1.003,
+  "loss_history": [
+    {
+      "epoch": 1,
+      "loss": 3.12
+    },
+    {
+      "epoch": 2,
+      "loss": 1.84
+    },
+    {
+      "epoch": 3,
+      "loss": 0.72
+    }
+  ]
+}

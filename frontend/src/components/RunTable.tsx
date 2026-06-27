@@ -1,19 +1,5 @@
-import type { RunSummary } from "../api/runs";
+import { getPrimaryMetric, type RunSummary } from "../api/runs";
 import { navigateTo } from "../navigation";
-
-function getKeyMetric(run: RunSummary) {
-  const metrics = run.metrics || {};
-  if (typeof metrics.token_accuracy === "number") {
-    return `accuracy ${metrics.token_accuracy.toFixed(3)}`;
-  }
-  if (typeof metrics.perplexity === "number") {
-    return `ppl ${metrics.perplexity.toFixed(3)}`;
-  }
-  if (typeof metrics.eval_loss === "number") {
-    return `loss ${metrics.eval_loss.toFixed(3)}`;
-  }
-  return "n/a";
-}
 
 export default function RunTable({ runs }: { runs: RunSummary[] }) {
   if (runs.length === 0) {
@@ -36,14 +22,26 @@ export default function RunTable({ runs }: { runs: RunSummary[] }) {
         <tbody>
           {runs.map((run) => (
             <tr key={run.run_id} onClick={() => navigateTo(`/runs/${encodeURIComponent(run.run_id)}`)}>
-              <td className="mono">{run.run_id}</td>
-              <td>{run.task}</td>
+              <td>
+                <div className="run-id-cell">
+                  <span className="mono">{run.run_id}</span>
+                  <span>{run.output_dir}</span>
+                </div>
+              </td>
+              <td>
+                <span className="task-chip">{run.task === "language_modeling" ? "Language modeling" : "NER"}</span>
+              </td>
               <td>{run.model_type}</td>
               <td>
                 <span className={`status-pill ${run.status}`}>{run.status}</span>
               </td>
               <td>{run.created_at}</td>
-              <td>{getKeyMetric(run)}</td>
+              <td>
+                <div className="key-metric">
+                  <strong>{getPrimaryMetric(run).value}</strong>
+                  <span>{getPrimaryMetric(run).label}</span>
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>

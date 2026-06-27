@@ -2,6 +2,13 @@ import { apiClient } from "./client";
 
 export type Metrics = Record<string, unknown>;
 
+export type LossPoint = {
+  epoch: number;
+  loss: number;
+  token_accuracy?: number;
+  perplexity?: number;
+};
+
 export type RunSummary = {
   run_id: string;
   task: string;
@@ -17,6 +24,36 @@ export type RunSummary = {
 
 export type PredictionRow = Record<string, unknown>;
 export type FailureCase = Record<string, unknown>;
+
+export function formatMetricValue(value: unknown) {
+  if (typeof value === "number") {
+    if (value >= 100) {
+      return value.toFixed(1);
+    }
+    if (value >= 10) {
+      return value.toFixed(2);
+    }
+    return value.toFixed(4);
+  }
+  if (value === null || value === undefined || value === "") {
+    return "n/a";
+  }
+  return String(value);
+}
+
+export function getPrimaryMetric(run: RunSummary) {
+  const metrics = run.metrics || {};
+  if (typeof metrics.token_accuracy === "number") {
+    return { label: "Token accuracy", value: formatMetricValue(metrics.token_accuracy) };
+  }
+  if (typeof metrics.perplexity === "number") {
+    return { label: "Perplexity", value: formatMetricValue(metrics.perplexity) };
+  }
+  if (typeof metrics.eval_loss === "number") {
+    return { label: "Eval loss", value: formatMetricValue(metrics.eval_loss) };
+  }
+  return { label: "Metric", value: "n/a" };
+}
 
 export async function fetchRuns(): Promise<RunSummary[]> {
   const response = await apiClient.get<RunSummary[]>("/api/runs");

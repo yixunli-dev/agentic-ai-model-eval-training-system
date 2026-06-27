@@ -7,8 +7,18 @@ type RunWorkflowFormProps = {
 };
 
 const configOptions = [
-  { label: "LSTM NER", value: "configs/ner_workflow.yaml" },
-  { label: "Transformer Decoder", value: "configs/transformer_workflow.yaml" }
+  {
+    label: "LSTM NER",
+    value: "configs/ner_workflow.yaml",
+    description: "Train a sequence tagger, evaluate token accuracy, mine NER failures.",
+    outputs: "model.pt, metrics.json, predictions.jsonl, failure_cases.jsonl, report.md"
+  },
+  {
+    label: "Transformer Decoder",
+    value: "configs/transformer_workflow.yaml",
+    description: "Train a manual decoder for next-token prediction and inspect generated text.",
+    outputs: "model.pt, perplexity metrics, generated text, report.md"
+  }
 ];
 
 export default function RunWorkflowForm({
@@ -20,17 +30,31 @@ export default function RunWorkflowForm({
 }: RunWorkflowFormProps) {
   return (
     <div className="form-panel">
-      <label htmlFor="config-path">Workflow config</label>
-      <select id="config-path" value={selectedConfig} onChange={(event) => onConfigChange(event.target.value)}>
+      <label>Choose a workflow</label>
+      <div className="workflow-card-grid">
         {configOptions.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label} - {option.value}
-          </option>
+          <button
+            className={`workflow-card ${selectedConfig === option.value ? "selected" : ""}`}
+            key={option.value}
+            onClick={() => onConfigChange(option.value)}
+            type="button"
+          >
+            <strong>{option.label}</strong>
+            <span>{option.value}</span>
+            <p>{option.description}</p>
+            <small>{option.outputs}</small>
+          </button>
         ))}
-      </select>
+      </div>
       <button className="primary-button" disabled={isSubmitting} onClick={onSubmit}>
         {isSubmitting ? "Running workflow..." : "Run Workflow"}
       </button>
+      {isSubmitting ? (
+        <div className="progress-note">
+          Running synchronously through FastAPI. This can take a few seconds while training and
+          report generation finish.
+        </div>
+      ) : null}
       {error ? <p className="error-text">{error}</p> : null}
     </div>
   );

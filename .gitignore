@@ -13,7 +13,12 @@ frontend/node_modules/
 frontend/dist/
 
 # Generated experiment artifacts
-outputs/
+outputs/runs/*
+outputs/*.db
+!outputs/
+!outputs/sample_metrics.json
+!outputs/sample_predictions.jsonl
+!outputs/sample_report.md
 
 # Local environment
 .env

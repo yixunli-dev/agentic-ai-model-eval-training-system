@@ -5,6 +5,7 @@ import {
   fetchPredictions,
   fetchReport,
   fetchRun,
+  formatMetricValue,
   type FailureCase,
   type Metrics,
   type PredictionRow,
@@ -15,6 +16,7 @@ import LossChart from "../components/LossChart";
 import MetricCard from "../components/MetricCard";
 import PredictionTable from "../components/PredictionTable";
 import ReportViewer from "../components/ReportViewer";
+import { navigateTo } from "../navigation";
 
 type RunDetailPageProps = {
   runId: string;
@@ -28,6 +30,7 @@ export default function RunDetailPage({ runId }: RunDetailPageProps) {
   const [report, setReport] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("predictions");
 
   useEffect(() => {
     Promise.all([
@@ -78,20 +81,28 @@ export default function RunDetailPage({ runId }: RunDetailPageProps) {
     return <div className="error-box">{error || "Run not found."}</div>;
   }
 
+  const isTransformerRun = run.task === "language_modeling";
+
   return (
     <section className="page-section">
       <div className="page-header">
         <div>
+          <button className="text-button" onClick={() => navigateTo("/")}>
+            Back to dashboard
+          </button>
           <h2>{run.run_id}</h2>
           <p>
             {run.task} / {run.model_type} / {run.status}
           </p>
         </div>
+        <button className="secondary-button" onClick={() => navigateTo("/new")}>
+          Run another workflow
+        </button>
       </div>
       <div className="metric-grid">
-        <MetricCard label="Eval loss" value={metrics.eval_loss as number | string | undefined} />
-        <MetricCard label="Token accuracy" value={metrics.token_accuracy as number | string | undefined} />
-        <MetricCard label="Perplexity" value={metrics.perplexity as number | string | undefined} />
+        <MetricCard label="Eval loss" value={formatMetricValue(metrics.eval_loss)} />
+        <MetricCard label="Token accuracy" value={formatMetricValue(metrics.token_accuracy)} />
+        <MetricCard label="Perplexity" value={formatMetricValue(metrics.perplexity)} />
         <MetricCard label="Failures" value={failures.length} />
       </div>
       <div className="detail-grid">
@@ -107,20 +118,32 @@ export default function RunDetailPage({ runId }: RunDetailPageProps) {
           </dl>
         </section>
         <section className="panel">
-          <h3>Training Loss</h3>
-          <LossChart points={lossPoints} />
+          <h3>{isTransformerRun ? "Language Modeling Story" : "NER Evaluation Story"}</h3>
+          <p className="insight-text">
+            {isTransformerRun
+              ? "This run trains a manual Transformer decoder, evaluates next-token prediction loss, and stores a generated sample for qualitative review."
+              : "This run trains an LSTM sequence tagger, compares predicted tags with gold tags, and mines token-level failure cases."}
+          </p>
         </section>
         <section className="panel wide">
-          <h3>Predictions</h3>
-          <PredictionTable predictions={predictions} />
-        </section>
-        <section className="panel">
-          <h3>Failure Cases</h3>
-          <FailureCaseList failures={failures} />
-        </section>
-        <section className="panel wide">
-          <h3>Report</h3>
-          <ReportViewer report={report} />
+          <div className="tab-bar">
+            <button className={activeTab === "predictions" ? "active" : ""} onClick={() => setActiveTab("predictions")}>
+              Predictions
+            </button>
+            <button className={activeTab === "failures" ? "active" : ""} onClick={() => setActiveTab("failures")}>
+              Failure cases
+            </button>
+            <button className={activeTab === "loss" ? "active" : ""} onClick={() => setActiveTab("loss")}>
+              Loss chart
+            </button>
+            <button className={activeTab === "report" ? "active" : ""} onClick={() => setActiveTab("report")}>
+              Report
+            </button>
+          </div>
+          {activeTab === "predictions" ? <PredictionTable predictions={predictions} /> : null}
+          {activeTab === "failures" ? <FailureCaseList failures={failures} /> : null}
+          {activeTab === "loss" ? <LossChart points={lossPoints} /> : null}
+          {activeTab === "report" ? <ReportViewer report={report} /> : null}
         </section>
       </div>
     </section>
