@@ -1,0 +1,13 @@
+torch
+langgraph
+langchain
+numpy
+pandas
+scikit-learn
+matplotlib
+pytest
+PyYAML
+fastapi
+sqlalchemy
+pydantic
+uvicorn

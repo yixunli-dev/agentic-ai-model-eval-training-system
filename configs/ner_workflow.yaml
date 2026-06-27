@@ -1,0 +1,8 @@
+seed: 42
+run_name: sample_ner_lstm
+dataset_path: data/sample_ner.txt
+output_dir: outputs/runs
+embedding_dim: 32
+hidden_dim: 64
+epochs: 35
+learning_rate: 0.01

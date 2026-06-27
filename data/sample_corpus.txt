@@ -1,0 +1,6 @@
+machine learning models predict tokens
+machine learning helps build ai systems
+transformer models use attention masks
+causal masks block future tokens
+ai systems evaluate model failures
+model training improves predictions

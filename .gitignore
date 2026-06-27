@@ -1,0 +1,20 @@
+.DS_Store
+Agents.md
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+
+# Generated experiment artifacts
+outputs/
+
+# Local environment
+.env
+.env.*

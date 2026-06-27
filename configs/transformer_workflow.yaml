@@ -1,0 +1,17 @@
+task: language_modeling
+model_type: transformer_decoder
+run_name: transformer_decoder_lm
+dataset_path: data/sample_corpus.txt
+output_dir: outputs/runs
+epochs: 50
+learning_rate: 0.01
+batch_size: 4
+sequence_length: 6
+embedding_dim: 32
+num_heads: 4
+num_layers: 2
+feedforward_dim: 64
+dropout: 0.0
+seed: 42
+sample_prompt: machine learning
+max_new_tokens: 6

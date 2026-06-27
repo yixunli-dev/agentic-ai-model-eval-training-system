@@ -1,0 +1,19 @@
+Tesla B-ORG
+builds O
+vehicles O
+in O
+California B-LOC
+
+Alice B-PER
+works O
+at O
+OpenAI B-ORG
+
+Seattle B-LOC
+hosts O
+AI B-MISC
+events O
+
+Bob B-PER
+uses O
+PyTorch B-MISC
